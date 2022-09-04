@@ -1,0 +1,29 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres:14.5-bullseye
+
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+      - ./init.sql/add-user.sh:/docker-entrypoint-initdb.d/add-user.sh
+    
+
+    environment:
+#      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    ports:
+      - '5432:5432'
+
+  live:
+    image: lazharus/sograllive
+    ports:
+      - '80:80'
+    
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+    depends_on:
+      - db
+
